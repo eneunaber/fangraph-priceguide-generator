@@ -1,0 +1,8 @@
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/bin/Debug/netcoreapp1.1/fangraph-priceguide-generator.deps.json
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/bin/Debug/netcoreapp1.1/fangraph-priceguide-generator.runtimeconfig.json
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/bin/Debug/netcoreapp1.1/fangraph-priceguide-generator.runtimeconfig.dev.json
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/bin/Debug/netcoreapp1.1/fangraph-priceguide-generator.dll
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/bin/Debug/netcoreapp1.1/fangraph-priceguide-generator.pdb
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/obj/Debug/netcoreapp1.1/fangraph-priceguide-generator.AssemblyInfo.cs
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/obj/Debug/netcoreapp1.1/fangraph-priceguide-generator.dll
+/Users/eric.neunaber/Documents/Projects/personal/fangraph-priceguide-generator/obj/Debug/netcoreapp1.1/fangraph-priceguide-generator.pdb
