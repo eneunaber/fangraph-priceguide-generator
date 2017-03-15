@@ -42,6 +42,13 @@ namespace fangraph_priceguide_generator
 
                 List<ConversionRecord> conversionRecords = Mapper.Map<List<MasterConversionRecord>, List<ConversionRecord>>(records);
                 Console.WriteLine("converted records.count {0}", conversionRecords.Count);
+
+                using (TextWriter writer = File.CreateText(idConversionPath)) {
+                    var csv = new CsvWriter( writer );
+                    csv.WriteRecords(conversionRecords);
+                    Console.WriteLine("....Done writing.....");
+                }
+
             } catch(Exception ex){
                 Console.WriteLine("Except caught:" + ex.Message);
                 Console.WriteLine(ex.Data["CsvHelper"]);
