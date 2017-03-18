@@ -1,5 +1,3 @@
-using System;
-
 namespace fangraph_priceguide_generator
 {
     public class MasterConversionRecord
