@@ -13,11 +13,14 @@ namespace fangraph_priceguide_generator
         {
             Console.WriteLine("Begin....");
             try {
-                var idMapFileName = args.GetValue(0).ToString();
-                var idConversionPath = args.GetValue(1).ToString();
-                var fgBatter = args.GetValue(2).ToString();
+                var year = Convert.ToInt32(args.GetValue(0));
+                var idMapFileName = args.GetValue(1).ToString();
+                var idConversionPath = args.GetValue(2).ToString();
+                var positionsPath = args.GetValue(3).ToString();
+                var fgBatter = args.GetValue(4).ToString();
                 Console.WriteLine("name: {0}", idMapFileName);
                 Console.WriteLine("path: {0}", idConversionPath);
+                Console.WriteLine("positionsPath: {0}", positionsPath);
                 Console.WriteLine("fgBatter: {0}", fgBatter);
 
                 List<MasterConversionRecord> records;
@@ -51,6 +54,13 @@ namespace fangraph_priceguide_generator
                     Console.WriteLine("....Done writing.....");
                 }
 
+                List<LahmanFielding> lahmanRecords;
+                using (TextReader reader = File.OpenText(positionsPath)) {
+                    var csv = new CsvReader( reader );
+                    lahmanRecords = csv.GetRecords<LahmanFielding>().ToList();
+                }
+                Console.WriteLine("lahmanRecords.count {0}", lahmanRecords.Count);                
+
                 var fgrecords = new List<FangraphHitterRecord>();
                 using (TextReader reader = File.OpenText(fgBatter)) {
                     var csv = new CsvReader(reader);
@@ -59,13 +69,25 @@ namespace fangraph_priceguide_generator
                     fgrecords = new List<FangraphHitterRecord>(mappedRecords);
                 }
 
-
                 fgrecords.ForEach(x => {
                     var match = records.FirstOrDefault(y => x.playerid == y.fg_id);
-                    if(match != null){
+                    if(match != null) {
                         x.defaultPos = match.yahoo_pos.Replace("/", "|");
                         x.team = match.mlb_team;
                         x.mlbamID = match.mlb_id;
+                        var lahmanMatch = lahmanRecords.FirstOrDefault(z => match.lahman_id == z.playerID && year == z.yearID);
+                        if(lahmanMatch != null) {
+                            x.G = lahmanMatch.G_all;
+                            x.G_1B = lahmanMatch.G_1b;
+                            x.G_2B = lahmanMatch.G_2b;
+                            x.G_3B = lahmanMatch.G_3b;
+                            x.G_SS = lahmanMatch.G_ss;
+                            x.G_C = lahmanMatch.G_c;
+                            x.G_CF = lahmanMatch.G_cf;
+                            x.G_LF = lahmanMatch.G_lf;
+                            x.G_RF = lahmanMatch.G_rf;
+                            x.league = lahmanMatch.lgID;
+                        }
                     }
                 });
 
