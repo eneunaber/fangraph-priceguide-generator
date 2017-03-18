@@ -19,7 +19,7 @@ namespace fangraph_priceguide_generator
             Map(m => m.HBP).Name("HBP");
             Map(m => m.SB).Name("SB");
             Map(m => m.CS).Name("CS");
-            Map(m => m.mlbamID).Name("playerid");
+            Map(m => m.playerid).Name("playerid");
         }
     }
 }

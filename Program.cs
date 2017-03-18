@@ -58,6 +58,17 @@ namespace fangraph_priceguide_generator
                     var mappedRecords = csv.GetRecords<FangraphHitterRecord>();
                     fgrecords = new List<FangraphHitterRecord>(mappedRecords);
                 }
+
+
+                fgrecords.ForEach(x => {
+                    var match = records.FirstOrDefault(y => x.playerid == y.fg_id);
+                    if(match != null){
+                        x.defaultPos = match.yahoo_pos.Replace("/", "|");
+                        x.team = match.mlb_team;
+                        x.mlbamID = match.mlb_id;
+                    }
+                });
+
                 Console.WriteLine("fgRecord.count: {0}", fgrecords.Count);
 
             } catch(Exception ex){

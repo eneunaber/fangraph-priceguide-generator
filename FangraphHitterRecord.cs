@@ -18,7 +18,8 @@ namespace fangraph_priceguide_generator
         public int 	HBP {get;set;}
         public int SB {get;set;}	
         public int CS {get;set;}
-        public int mlbamID {get;set;}
+        public int? mlbamID {get;set;}
+        public string playerid {get;set;}
         public int G_C {get;set;}
         public int G_1B {get;set;}
         public int G_2B {get;set;}
