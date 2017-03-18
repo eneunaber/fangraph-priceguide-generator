@@ -15,8 +15,10 @@ namespace fangraph_priceguide_generator
             try {
                 var idMapFileName = args.GetValue(0).ToString();
                 var idConversionPath = args.GetValue(1).ToString();
+                var fgBatter = args.GetValue(2).ToString();
                 Console.WriteLine("name: {0}", idMapFileName);
                 Console.WriteLine("path: {0}", idConversionPath);
+                Console.WriteLine("fgBatter: {0}", fgBatter);
 
                 List<MasterConversionRecord> records;
 
@@ -48,6 +50,15 @@ namespace fangraph_priceguide_generator
                     csv.WriteRecords(conversionRecords);
                     Console.WriteLine("....Done writing.....");
                 }
+
+                var fgrecords = new List<FangraphHitterRecord>();
+                using (TextReader reader = File.OpenText(fgBatter)) {
+                    var csv = new CsvReader(reader);
+                    csv.Configuration.RegisterClassMap<FangraphHitterRecordMap>();
+                    var mappedRecords = csv.GetRecords<FangraphHitterRecord>();
+                    fgrecords = new List<FangraphHitterRecord>(mappedRecords);
+                }
+                Console.WriteLine("fgRecord.count: {0}", fgrecords.Count);
 
             } catch(Exception ex){
                 Console.WriteLine("Except caught:" + ex.Message);
