@@ -12,7 +12,8 @@ namespace fangraph_priceguide_generator
         static void Main(string[] args)
         {
             Console.WriteLine("Begin....");
-            try {
+            try
+            {
                 var year = Convert.ToInt32(args.GetValue(0));
                 var idMapFileName = args.GetValue(1).ToString();
                 var idConversionPath = args.GetValue(2).ToString();
@@ -25,7 +26,7 @@ namespace fangraph_priceguide_generator
 
                 List<MasterConversionRecord> records = LoadFile<MasterConversionRecord>(idMapFileName);
 
-                Mapper.Initialize(cfg => 
+                Mapper.Initialize(cfg =>
                     cfg.CreateMap<MasterConversionRecord, ConversionRecord>()
                         .ForMember(dest => dest.mlbamID, opt => opt.MapFrom(src => src.mlb_id))
                         .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.mlb_name))
@@ -42,23 +43,22 @@ namespace fangraph_priceguide_generator
                 List<ConversionRecord> conversionRecords = Mapper.Map<List<MasterConversionRecord>, List<ConversionRecord>>(records);
                 Console.WriteLine("converted records.count {0}", conversionRecords.Count);
 
-                using (TextWriter writer = File.CreateText(idConversionPath)) {
-                    var csv = new CsvWriter( writer );
-                    csv.WriteRecords(conversionRecords);
-                    Console.WriteLine("....Done writing.....");
-                }
+                SaveFile<ConversionRecord>(conversionRecords, idConversionPath);
 
-                List<LahmanFielding> lahmanRecords = LoadFile<LahmanFielding>(positionsPath);              
-                List<FangraphHitterRecord> fgrecords = LoadFile<FangraphHitterRecord>(fgBatter);  
+                List<LahmanFielding> lahmanRecords = LoadFile<LahmanFielding>(positionsPath);
+                List<FangraphHitterRecord> fgrecords = LoadFile<FangraphHitterRecord>(fgBatter);
 
-                fgrecords.ForEach(x => {
+                fgrecords.ForEach(x =>
+                {
                     var match = records.FirstOrDefault(y => x.playerid == y.fg_id);
-                    if(match != null) {
+                    if (match != null)
+                    {
                         x.defaultPos = match.yahoo_pos.Replace("/", "|");
                         x.team = match.mlb_team;
                         x.mlbamID = match.mlb_id;
                         var lahmanMatch = lahmanRecords.FirstOrDefault(z => match.lahman_id == z.playerID && year == z.yearID);
-                        if(lahmanMatch != null) {
+                        if (lahmanMatch != null)
+                        {
                             x.G = lahmanMatch.G_all;
                             x.G_1B = lahmanMatch.G_1b;
                             x.G_2B = lahmanMatch.G_2b;
@@ -74,21 +74,14 @@ namespace fangraph_priceguide_generator
                     }
                 });
 
-                Console.WriteLine("fgRecord.count: {0}", fgrecords.Count);
-                // fgrecords.ForEach(x => Console.WriteLine(x));
-                using (TextWriter writer = File.CreateText("/Users/eric.neunaber/Downloads/fred.csv")) {
-                    var csv = new CsvWriter( writer );
-                    csv.WriteRecords(fgrecords);
-                    Console.WriteLine("....Done writing.....");
-                }
-
-            } catch(Exception ex){
+                SaveFile<FangraphHitterRecord>(fgrecords, "/Users/eric.neunaber/Downloads/fred.csv");
+            }
+            catch (Exception ex){
                 Console.WriteLine("Except caught:" + ex.Message);
                 Console.WriteLine(ex.Data["CsvHelper"]);
             }
             Console.WriteLine("End....");
         }
-
         public static List<T> LoadFile<T>(string fileLocation) {
             List<T> records = new List<T>();
             Console.WriteLine("Begin reading for file: {0}", fileLocation);
@@ -97,8 +90,19 @@ namespace fangraph_priceguide_generator
                 csv.Configuration.RegisterClassMap<FangraphHitterRecordMap>();
                 records = csv.GetRecords<T>().ToList();
             }
-            Console.WriteLine("{0}.count {1}", typeof(T).FullName,records.Count);   
+            Console.WriteLine("{0}.count {1}", typeof(T).FullName,records.Count);
             return records;
         }
+        private static void SaveFile<T>(List<T> records, string fileLocation)
+        {
+            Console.WriteLine("fgRecord.count: {0}", records.Count);
+            using (TextWriter writer = File.CreateText(fileLocation))
+            {
+                var csv = new CsvWriter(writer);
+                csv.WriteRecords(records);
+                Console.WriteLine("....Done writing.....");
+            }
+        }        
+
     }
 }
