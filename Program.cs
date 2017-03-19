@@ -23,13 +23,7 @@ namespace fangraph_priceguide_generator
                 Console.WriteLine("positionsPath: {0}", positionsPath);
                 Console.WriteLine("fgBatter: {0}", fgBatter);
 
-                List<MasterConversionRecord> records;
-
-                using (TextReader reader = File.OpenText(idMapFileName)) {
-                    var csv = new CsvReader( reader );
-                    records = csv.GetRecords<MasterConversionRecord>().ToList();
-                }
-                Console.WriteLine("records.count {0}", records.Count);
+                List<MasterConversionRecord> records = LoadFile<MasterConversionRecord>(idMapFileName);
 
                 Mapper.Initialize(cfg => 
                     cfg.CreateMap<MasterConversionRecord, ConversionRecord>()
@@ -54,20 +48,8 @@ namespace fangraph_priceguide_generator
                     Console.WriteLine("....Done writing.....");
                 }
 
-                List<LahmanFielding> lahmanRecords;
-                using (TextReader reader = File.OpenText(positionsPath)) {
-                    var csv = new CsvReader( reader );
-                    lahmanRecords = csv.GetRecords<LahmanFielding>().ToList();
-                }
-                Console.WriteLine("lahmanRecords.count {0}", lahmanRecords.Count);                
-
-                var fgrecords = new List<FangraphHitterRecord>();
-                using (TextReader reader = File.OpenText(fgBatter)) {
-                    var csv = new CsvReader(reader);
-                    csv.Configuration.RegisterClassMap<FangraphHitterRecordMap>();
-                    var mappedRecords = csv.GetRecords<FangraphHitterRecord>();
-                    fgrecords = new List<FangraphHitterRecord>(mappedRecords);
-                }
+                List<LahmanFielding> lahmanRecords = LoadFile<LahmanFielding>(positionsPath);              
+                List<FangraphHitterRecord> fgrecords = LoadFile<FangraphHitterRecord>(fgBatter);  
 
                 fgrecords.ForEach(x => {
                     var match = records.FirstOrDefault(y => x.playerid == y.fg_id);
@@ -105,6 +87,18 @@ namespace fangraph_priceguide_generator
                 Console.WriteLine(ex.Data["CsvHelper"]);
             }
             Console.WriteLine("End....");
+        }
+
+        public static List<T> LoadFile<T>(string fileLocation) {
+            List<T> records = new List<T>();
+            Console.WriteLine("Begin reading for file: {0}", fileLocation);
+            using (TextReader reader = File.OpenText(fileLocation)) {
+                var csv = new CsvReader( reader );
+                csv.Configuration.RegisterClassMap<FangraphHitterRecordMap>();
+                records = csv.GetRecords<T>().ToList();
+            }
+            Console.WriteLine("{0}.count {1}", typeof(T).FullName,records.Count);   
+            return records;
         }
     }
 }
