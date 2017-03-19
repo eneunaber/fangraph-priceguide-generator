@@ -86,12 +86,19 @@ namespace fangraph_priceguide_generator
                             x.G_CF = lahmanMatch.G_cf;
                             x.G_LF = lahmanMatch.G_lf;
                             x.G_RF = lahmanMatch.G_rf;
+                            x.G_OF = lahmanMatch.G_of;
                             x.league = lahmanMatch.lgID;
                         }
                     }
                 });
 
                 Console.WriteLine("fgRecord.count: {0}", fgrecords.Count);
+                // fgrecords.ForEach(x => Console.WriteLine(x));
+                using (TextWriter writer = File.CreateText("/Users/eric.neunaber/Downloads/fred.csv")) {
+                    var csv = new CsvWriter( writer );
+                    csv.WriteRecords(fgrecords);
+                    Console.WriteLine("....Done writing.....");
+                }
 
             } catch(Exception ex){
                 Console.WriteLine("Except caught:" + ex.Message);
