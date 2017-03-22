@@ -19,26 +19,32 @@ namespace fangraph_priceguide_generator
                 var idConversionPath = args.GetValue(2).ToString();
                 var positionsPath = args.GetValue(3).ToString();
                 var fgBatter = args.GetValue(4).ToString();
+                var fgPitcher = args.GetValue(5).ToString();
+
                 Console.WriteLine("name: {0}", idMapFileName);
                 Console.WriteLine("path: {0}", idConversionPath);
                 Console.WriteLine("positionsPath: {0}", positionsPath);
                 Console.WriteLine("fgBatter: {0}", fgBatter);
+                Console.WriteLine("fgPitcher: {0}", fgPitcher);
 
                 SetUpMappings();
 
-                List<MasterConversionRecord> records = LoadFile<MasterConversionRecord>(idMapFileName);
-                List<LahmanFielding> lahmanRecords = LoadFile<LahmanFielding>(positionsPath);
-                List<FangraphHitterRecord> fgrecords = LoadFile<FangraphHitterRecord>(fgBatter);
+                List<MasterConversionRecord> masterRecords = LoadFile<MasterConversionRecord>(idMapFileName);
+                List<LahmanAppearancesRecord> lahmanRecords = LoadFile<LahmanAppearancesRecord>(positionsPath);
+                List<FangraphHitterRecord> fgHitterRecords = LoadFile<FangraphHitterRecord>(fgBatter);
+                List<FangraphPitchingRecord> fgPitchingRecords = LoadFile<FangraphPitchingRecord>(fgPitcher);
 
-                List<ConversionRecord> conversionRecords = Mapper.Map<List<MasterConversionRecord>, List<ConversionRecord>>(records);
+                List<ConversionRecord> conversionRecords = Mapper.Map<List<MasterConversionRecord>, List<ConversionRecord>>(masterRecords);
                 Console.WriteLine("converted records.count {0}", conversionRecords.Count);
 
                 SaveFile<ConversionRecord>(conversionRecords, idConversionPath);
 
-                CreateHitterRecord(year, records, lahmanRecords, fgrecords);
+                CreateHitterRecord(year, masterRecords, lahmanRecords, fgHitterRecords);
+                CreatePitchingRecord(year, masterRecords, lahmanRecords, fgPitchingRecords);
 
-                SaveFile<FangraphHitterRecord>(fgrecords, "/Users/eric.neunaber/Downloads/fred.csv");
+                SaveFile<FangraphHitterRecord>(fgHitterRecords, "/Users/eric.neunaber/Downloads/fred.csv");
                 AlterHitterHeaders("/Users/eric.neunaber/Downloads/fred.csv");
+                SaveFile<FangraphPitchingRecord>(fgPitchingRecords, "/Users/eric.neunaber/Downloads/ted.csv");
             }
             catch (Exception ex){
                 Console.WriteLine("Except caught:" + ex.Message);
@@ -47,7 +53,7 @@ namespace fangraph_priceguide_generator
             Console.WriteLine("End....");
         }
 
-        private static void CreateHitterRecord(int year, List<MasterConversionRecord> records, List<LahmanFielding> lahmanRecords, List<FangraphHitterRecord> fgrecords)
+        private static void CreateHitterRecord(int year, List<MasterConversionRecord> records, List<LahmanAppearancesRecord> lahmanRecords, List<FangraphHitterRecord> fgrecords)
         {
             fgrecords.ForEach(x =>
             {
@@ -70,6 +76,30 @@ namespace fangraph_priceguide_generator
                         x.G_LF = lahmanMatch.G_lf;
                         x.G_RF = lahmanMatch.G_rf;
                         x.G_OF = lahmanMatch.G_of;
+                        x.league = lahmanMatch.lgID;
+                    }
+                }
+            });
+        }
+
+        private static void CreatePitchingRecord(int year, List<MasterConversionRecord> records, List<LahmanAppearancesRecord> lahmanRecords, List<FangraphPitchingRecord> fgrecords)
+        {
+            fgrecords.ForEach(x =>
+            {
+                var match = records.FirstOrDefault(y => x.playerid == y.fg_id);
+                if (match != null)
+                {
+                    x.defaultPos = match.yahoo_pos.Replace("/", "|");
+                    x.team = match.mlb_team;
+                    x.mlbamID = match.mlb_id;
+                    var lahmanMatch = lahmanRecords.FirstOrDefault(z => match.lahman_id == z.playerID && year == z.yearID);
+                    if (lahmanMatch != null)
+                    {
+                        x.G = lahmanMatch.G_all;
+                        if(lahmanMatch.GS.HasValue) {
+                            x.G_SP = lahmanMatch.GS.Value;
+                            x.G_RP = lahmanMatch.G_p - lahmanMatch.GS.Value;
+                        }
                         x.league = lahmanMatch.lgID;
                     }
                 }
@@ -99,6 +129,7 @@ namespace fangraph_priceguide_generator
             using (TextReader reader = File.OpenText(fileLocation)) {
                 var csv = new CsvReader( reader );
                 csv.Configuration.RegisterClassMap<FangraphHitterRecordMap>();
+                csv.Configuration.RegisterClassMap<FangraphPitcherRecordMap>();
                 records = csv.GetRecords<T>().ToList();
             }
             Console.WriteLine("{0}.count {1}", typeof(T).FullName,records.Count);

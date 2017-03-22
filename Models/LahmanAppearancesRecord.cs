@@ -1,6 +1,6 @@
 namespace fangraph_priceguide_generator
 {
-    public class LahmanFielding
+    public class LahmanAppearancesRecord
     {
         public int yearID {get;set;}
         public string teamID {get;set;}
@@ -16,5 +16,7 @@ namespace fangraph_priceguide_generator
         public int	G_cf {get;set;}		
         public int G_rf {get;set;}		
         public int G_of {get;set;}	
+        public int? GS {get;set;}	
+        public int G_p {get;set;}	
     }
 }
