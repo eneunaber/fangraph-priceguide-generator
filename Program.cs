@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using CsvHelper;
 using AutoMapper;
 
 namespace fangraph_priceguide_generator
@@ -27,24 +26,24 @@ namespace fangraph_priceguide_generator
                 Console.WriteLine("fgBatter: {0}", fgBatter);
                 Console.WriteLine("fgPitcher: {0}", fgPitcher);
 
-                SetUpMappings();
+                AutoMapperMappings.Setup();
 
-                List<MasterConversionRecord> masterRecords = LoadFile<MasterConversionRecord>(idMapFileName);
-                List<LahmanAppearancesRecord> lahmanRecords = LoadFile<LahmanAppearancesRecord>(positionsPath);
-                List<FangraphHitterRecord> fgHitterRecords = LoadFile<FangraphHitterRecord>(fgBatter);
-                List<FangraphPitchingRecord> fgPitchingRecords = LoadFile<FangraphPitchingRecord>(fgPitcher);
+                List<MasterConversionRecord> masterRecords = FileHelper.LoadFile<MasterConversionRecord>(idMapFileName);
+                List<LahmanAppearancesRecord> lahmanRecords = FileHelper.LoadFile<LahmanAppearancesRecord>(positionsPath);
+                List<FangraphHitterRecord> fgHitterRecords = FileHelper.LoadFile<FangraphHitterRecord>(fgBatter);
+                List<FangraphPitchingRecord> fgPitchingRecords = FileHelper.LoadFile<FangraphPitchingRecord>(fgPitcher);
 
                 List<ConversionRecord> conversionRecords = Mapper.Map<List<MasterConversionRecord>, List<ConversionRecord>>(masterRecords);
                 Console.WriteLine("converted records.count {0}", conversionRecords.Count);
 
-                SaveFile<ConversionRecord>(conversionRecords, idConversionPath);
+                FileHelper.SaveFile<ConversionRecord>(conversionRecords, idConversionPath);
 
                 CreateHitterRecord(year, masterRecords, lahmanRecords, fgHitterRecords);
                 CreatePitchingRecord(year, masterRecords, lahmanRecords, fgPitchingRecords);
 
-                SaveFile<FangraphHitterRecord>(fgHitterRecords, "/Users/eric.neunaber/Downloads/fred.csv");
+                FileHelper.SaveFile<FangraphHitterRecord>(fgHitterRecords, "/Users/eric.neunaber/Downloads/fred.csv");
                 AlterHitterHeaders("/Users/eric.neunaber/Downloads/fred.csv");
-                SaveFile<FangraphPitchingRecord>(fgPitchingRecords, "/Users/eric.neunaber/Downloads/ted.csv");
+                FileHelper.SaveFile<FangraphPitchingRecord>(fgPitchingRecords, "/Users/eric.neunaber/Downloads/ted.csv");
             }
             catch (Exception ex){
                 Console.WriteLine("Except caught:" + ex.Message);
@@ -105,46 +104,6 @@ namespace fangraph_priceguide_generator
                 }
             });
         }
-
-        private static void SetUpMappings()
-        {
-            Mapper.Initialize(cfg =>
-                cfg.CreateMap<MasterConversionRecord, ConversionRecord>()
-                    .ForMember(dest => dest.mlbamID, opt => opt.MapFrom(src => src.mlb_id))
-                    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.mlb_name))
-                    .ForMember(dest => dest.BDB, opt => opt.MapFrom(src => src.bref_id))
-                    .ForMember(dest => dest.statsID, opt => opt.MapFrom(src => src.nfbc_id))
-                    .ForMember(dest => dest.cbsID, opt => opt.MapFrom(src => src.cbs_id))
-                    .ForMember(dest => dest.espnID, opt => opt.MapFrom(src => src.espn_id))
-                    .ForMember(dest => dest.retroID, opt => opt.MapFrom(src => src.retro_id))
-                    .ForMember(dest => dest.Pos_Class, opt => opt.MapFrom(src => src.yahoo_pos.Replace("/", "|")))
-                    .ForMember(dest => dest.bisID, opt => opt.MapFrom(src => src.fg_id))
-                    .ForMember(dest => dest.team, opt => opt.MapFrom(src => src.mlb_team))
-            );
-        }
-
-        public static List<T> LoadFile<T>(string fileLocation) {
-            List<T> records = new List<T>();
-            Console.WriteLine("Begin reading for file: {0}", fileLocation);
-            using (TextReader reader = File.OpenText(fileLocation)) {
-                var csv = new CsvReader( reader );
-                csv.Configuration.RegisterClassMap<FangraphHitterRecordMap>();
-                csv.Configuration.RegisterClassMap<FangraphPitcherRecordMap>();
-                records = csv.GetRecords<T>().ToList();
-            }
-            Console.WriteLine("{0}.count {1}", typeof(T).FullName,records.Count);
-            return records;
-        }
-        private static void SaveFile<T>(List<T> records, string fileLocation)
-        {
-            Console.WriteLine("fgRecord.count: {0}", records.Count);
-            using (TextWriter writer = File.CreateText(fileLocation))
-            {
-                var csv = new CsvWriter(writer);
-                csv.WriteRecords(records);
-                Console.WriteLine("....Done writing.....");
-            }
-        }        
         private static void AlterHitterHeaders(string fileLocation)
         {
             Console.WriteLine("update replace hitter headers");
