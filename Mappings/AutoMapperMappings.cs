@@ -1,4 +1,3 @@
-
 using AutoMapper;
 
 namespace fangraph_priceguide_generator
