@@ -2,7 +2,7 @@ using CsvHelper.Configuration;
 
 namespace fangraph_priceguide_generator
 {
-    public class FangraphPitcherRecordMap : CsvClassMap<FangraphPitchingRecord>
+    public class FangraphPitcherRecordMap : CsvClassMap<FangraphPitcherRecord>
     {
         public FangraphPitcherRecordMap(){
             Map(m => m.playerName).Name("Name");

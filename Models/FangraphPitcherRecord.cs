@@ -1,7 +1,7 @@
 
 namespace fangraph_priceguide_generator
 {
-    public class FangraphPitchingRecord
+    public class FangraphPitcherRecord
     {
         public string playerName {get;set;}
         public string team	{get;set;}

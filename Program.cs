@@ -31,7 +31,7 @@ namespace fangraph_priceguide_generator
                 List<MasterConversionRecord> masterRecords = FileHelper.LoadFile<MasterConversionRecord>(idMapFileName);
                 List<LahmanAppearancesRecord> lahmanRecords = FileHelper.LoadFile<LahmanAppearancesRecord>(positionsPath);
                 List<FangraphHitterRecord> fgHitterRecords = FileHelper.LoadFile<FangraphHitterRecord>(fgBatter);
-                List<FangraphPitchingRecord> fgPitchingRecords = FileHelper.LoadFile<FangraphPitchingRecord>(fgPitcher);
+                List<FangraphPitcherRecord> fgPitchingRecords = FileHelper.LoadFile<FangraphPitcherRecord>(fgPitcher);
 
                 List<ConversionRecord> conversionRecords = Mapper.Map<List<MasterConversionRecord>, List<ConversionRecord>>(masterRecords);
                 Console.WriteLine("converted records.count {0}", conversionRecords.Count);
@@ -43,7 +43,7 @@ namespace fangraph_priceguide_generator
 
                 FileHelper.SaveFile<FangraphHitterRecord>(fgHitterRecords, "/Users/eric.neunaber/Downloads/fred.csv");
                 AlterHitterHeaders("/Users/eric.neunaber/Downloads/fred.csv");
-                FileHelper.SaveFile<FangraphPitchingRecord>(fgPitchingRecords, "/Users/eric.neunaber/Downloads/ted.csv");
+                FileHelper.SaveFile<FangraphPitcherRecord>(fgPitchingRecords, "/Users/eric.neunaber/Downloads/ted.csv");
             }
             catch (Exception ex){
                 Console.WriteLine("Except caught:" + ex.Message);
@@ -81,7 +81,7 @@ namespace fangraph_priceguide_generator
             });
         }
 
-        private static void CreatePitchingRecord(int year, List<MasterConversionRecord> records, List<LahmanAppearancesRecord> lahmanRecords, List<FangraphPitchingRecord> fgrecords)
+        private static void CreatePitchingRecord(int year, List<MasterConversionRecord> records, List<LahmanAppearancesRecord> lahmanRecords, List<FangraphPitcherRecord> fgrecords)
         {
             fgrecords.ForEach(x =>
             {
