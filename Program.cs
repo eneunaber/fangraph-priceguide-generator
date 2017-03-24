@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using AutoMapper;
 using fangraph_priceguide_generator.Strategy;
@@ -29,18 +30,18 @@ namespace fangraph_priceguide_generator
                 List<LahmanAppearancesRecord> lahmanRecords = FileHelper.LoadFile<LahmanAppearancesRecord>(lahmanAppearancesFileLocation);
                 List<ConversionRecord> conversionRecords = Mapper.Map<List<MasterConversionRecord>, List<ConversionRecord>>(masterRecords);
                 Console.WriteLine("converted records.count {0}", conversionRecords.Count);
-                FileHelper.SaveFile<ConversionRecord>(conversionRecords, saveLocation);                
+                FileHelper.SaveFile<ConversionRecord>(conversionRecords, Path.Combine(saveLocation,"IdConversion-FULL-New.csv"));                
 
                 var extraDetails = new ExtraDetails { Year = year, MasterRecords = masterRecords, LahmanRecords = lahmanRecords };
                 for(int x = 4; x <= args.Length - 1; x++) {
                     try {
                         var strategy = new FangraphHitterStrategy();
                         var result = strategy.LoadCSV(args[x]);
-                        strategy.WriteCSV(extraDetails,result,"/Users/eric.neunaber/Downloads/fred.csv");
+                        strategy.WriteCSV(extraDetails,result,Path.Combine(saveLocation, Path.GetFileNameWithoutExtension(args[x]) + "-New.csv"));
                     } catch(CsvHelper.CsvMissingFieldException ex) {
                         var strategy = new FangraphPitcherStrategy();
                         var result = strategy.LoadCSV(args[x]);
-                        strategy.WriteCSV(extraDetails,result,"/Users/eric.neunaber/Downloads/ted.csv");
+                        strategy.WriteCSV(extraDetails,result,Path.Combine(saveLocation, Path.GetFileNameWithoutExtension(args[x]) + "-New.csv"));
                     }
                 }
             }
