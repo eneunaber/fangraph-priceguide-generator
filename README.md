@@ -19,7 +19,7 @@ This project was created to automate this process of using Fangraphs and other s
 ## Data Sources
 A list of the datasources used to generate the Priceguide files:
 
-### Fantasy Baseball ID Mapping
+### Map of MLB Player Names and IDs
 This file provides a "universal" mapping of player ids. It will link a players "mlb_id" to id's for CBS, ESPN, Fangraphs, and more. This translation is useful when mapping against sources and is used by the Greasemonkey script that dipslay's player values while looking at your team.
 
 * http://crunchtimebaseball.com/baseball_map.html
