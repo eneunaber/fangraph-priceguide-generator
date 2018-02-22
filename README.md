@@ -38,3 +38,6 @@ A collection of baseball projections that are freely available for export.
 
 *Note: Go to Fangraphs > Projections (menu item) > {choose a projection} > right above the data table on the righ hand side is the "Export Data" option.*
 
+## How it works
+
+
