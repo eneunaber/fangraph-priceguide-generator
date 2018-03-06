@@ -29,6 +29,7 @@ This file provides a "universal" mapping of player ids. It will link a players "
 A collection of all historical baseball statistics from every previous year. For our needs this source provides us with a list of "appearances" by position for previous years.
 
 * http://www.seanlahman.com/baseball-archive/statistics/
+* https://github.com/chadwickbureau/baseballdatabank (version hosted on GitHub)
 
 
 ### Fangraphs
