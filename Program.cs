@@ -50,9 +50,9 @@ namespace fangraph_priceguide_generator
                                 Console.WriteLine("Except caught:" + ex.Message);
                                 return 1;
                             }
-                            Console.WriteLine("conversion-record......");
-                            Console.WriteLine("optionMasterCSV:" + optionMasterCSV.Value());
-                            Console.WriteLine("optionSaveLocation:" + optionSaveLocation.Value());
+                            // Console.WriteLine("conversion-record......");
+                            // Console.WriteLine("optionMasterCSV:" + optionMasterCSV.Value());
+                            // Console.WriteLine("optionSaveLocation:" + optionSaveLocation.Value());
                             return 0;
                         });
 
@@ -97,6 +97,14 @@ namespace fangraph_priceguide_generator
                                 string saveLocation = optionSaveLocation.Value() ?? string.Empty;
                                 List<string> fangraphFiles = optionFangraphFiles.Values;
 
+
+                                // Console.WriteLine("convert-fangraph......");
+                                // Console.WriteLine("previousYear:" + optionPreviousYear.Value());
+                                // Console.WriteLine("masterCSVFileLocation:" + optionMasterCSV.Value());
+                                // Console.WriteLine("lahmanAppearancesLocation:" + optionLahmanAppearancesLocation.Value());
+                                // Console.WriteLine("saveLocation:" + optionSaveLocation.Value());
+                                // Console.WriteLine("fangraphFiles:" + string.Join(", ", optionFangraphFiles.Values));
+
                                 List<MasterConversionRecord> masterRecords = FileHelper.LoadFile<MasterConversionRecord>(masterCSVFileLocation);
                                 List<LahmanAppearancesRecord> lahmanRecords = FileHelper.LoadFile<LahmanAppearancesRecord>(lahmanAppearancesLocation);
 
@@ -106,22 +114,17 @@ namespace fangraph_priceguide_generator
                                         var strategy = new FangraphHitterStrategy();
                                         var result = strategy.LoadCSV(f);
                                         strategy.WriteCSV(extraDetails,result,Path.Combine(saveLocation, Path.GetFileNameWithoutExtension(f) + "-New.csv"));
-                                    } catch(CsvHelper.CsvMissingFieldException ex) {
+                                    } catch(CsvHelper.CsvMissingFieldException) {
+                                        Console.WriteLine("Failed to convert {0}, trying pitcher strategy", f);
                                         var strategy = new FangraphPitcherStrategy();
                                         var result = strategy.LoadCSV(f);
                                         strategy.WriteCSV(extraDetails,result,Path.Combine(saveLocation, Path.GetFileNameWithoutExtension(f) + "-New.csv"));
                                     }                                    
                                 });
                             } catch(Exception ex) {
-                                Console.WriteLine("Except caught:" + ex.Message);
+                                Console.WriteLine("Exception caught:" + ex.Message);
                                 return 1;
                             }
-                            Console.WriteLine("conversion-record......");
-                            Console.WriteLine("previousYear:" + optionPreviousYear.Value());
-                            Console.WriteLine("masterCSVFileLocation:" + optionMasterCSV.Value());
-                            Console.WriteLine("lahmanAppearancesLocation:" + optionLahmanAppearancesLocation.Value());
-                            Console.WriteLine("saveLocation:" + optionSaveLocation.Value());
-                            Console.WriteLine("fangraphFiles:" + optionFangraphFiles.Value());
                             return 0;
                         });
 
