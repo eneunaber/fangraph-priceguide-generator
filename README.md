@@ -1,7 +1,6 @@
 # fangraph-priceguide-generator
 A command line tool to take exported fangraph projections and convert them to a format that will work with the (Priceguide)[https://github.com/mayscopeland/priceguide] application.
 
-
 ## Why
 > The Price Guide generates fantasy baseball dollar values customized for a myriad of league configurations. Dollar values can be customized for the number of teams, number of starters at each position, stat categories used, etc.
 
@@ -15,6 +14,50 @@ The Frangraph format does not match the format needed by Priceguide and needs to
 
 This project was created to automate this process of using Fangraphs and other sources to generate the Priceguide files. 
 
+## The Application
+This application has two commands that generate different types of file(s). Those commands are *conversion-record* and *convert-fangraph*. 
+
+### conversion-record
+The conversion-record command creates an IdConversion-FULL.csv file. This is a mapping file that links a players "mlbamId" to the player id for variou fantasy websites (espn, yaoo, cbs, etc.). Priceguide has a Greasemonkey script that allows for prices to be displayed inside the UI of your fantasy website. The IdConversion file is used as part of this.
+
+This command takes in two parameters.
+1. Location of the master.csv (from data source 'Map of MLB Player Names and IDs').
+1. The location the file is to be saved to.
+
+## How it works
+The master.csv file is read and converted to a list of in-memory records. That list is converted to the format that is used by Priceguid and then saved.
+
+#### How to run
+priceguide-generator conversion-record -m=<location of master.csv> -s=<output directory>
+
+**Note: '-New' will be added to the file name, so the final file will be called 'IdConverstion-FULL-New.csv'
+
+### convert-fangraph
+This command will combine data from the master, appearances, and the fangraph file to create a record for the Priceguied application.
+
+This command takes in two parameters.
+1. The previous mlb year (e.g. 2016)
+1. Location of the master.csv (from data source 'Map of MLB Player Names and IDs').
+1. Location of the Appearances.csv (from data source 'Lahman Statistical Archives').
+1. The location the file(s) is to be saved to.
+1. A variable length arguement, that will take in any number of file locations to FanGraph projection files.
+
+## How it works
+The master.csv and appearances files are read and converted to a list of in-memory records. Then the same is done for all of the Fangraph files. For each Fangraph file, either a Batting or Pitching conversion takes place. 
+
+A player's position, team, mlbamid is pulled from the master.csv.
+A player's games played per position is filled in using the previous years values. Which is found inside the Appearances.csv. 
+The rest of the fields are converted from the Fangraph file.
+
+#### How to run
+priceguide-generator convert-fangraph 
+                -py=<previous year [2016]> 
+                -m=<location of master.csv>
+                -l=<location of Lahman Appearances.csv>
+                -s=<output directory>
+                -f=<location of fangraphs projection file>
+                -f=<location of another fangraphs projection file>
+                -f=<...>
 
 ## Data Sources
 A list of the datasources used to generate the Priceguide files:
@@ -38,7 +81,3 @@ A collection of baseball projections that are freely available for export.
 * https://www.fangraphs.com/
 
 *Note: Go to Fangraphs > Projections (menu item) > {choose a projection} > right above the data table on the righ hand side is the "Export Data" option.*
-
-## How it works
-
-
