@@ -24,7 +24,7 @@ This command takes in two parameters.
 1. Location of the master.csv (from data source 'Map of MLB Player Names and IDs').
 1. The location the file is to be saved to.
 
-## How it works
+#### How it works
 The master.csv file is read and converted to a list of in-memory records. That list is converted to the format that is used by Priceguid and then saved.
 
 #### How to run
@@ -42,7 +42,7 @@ This command takes in two parameters.
 1. The location the file(s) is to be saved to.
 1. A variable length arguement, that will take in any number of file locations to FanGraph projection files.
 
-## How it works
+#### How it works
 The master.csv and appearances files are read and converted to a list of in-memory records. Then the same is done for all of the Fangraph files. For each Fangraph file, either a Batting or Pitching conversion takes place. 
 
 A player's position, team, mlbamid is pulled from the master.csv.
