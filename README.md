@@ -28,7 +28,9 @@ This command takes in two parameters.
 The master.csv file is read and converted to a list of in-memory records. That list is converted to the format that is used by Priceguid and then saved.
 
 #### How to run
+```
 priceguide-generator conversion-record -m=<location of master.csv> -s=<output directory>
+```
 
 **Note: '-New' will be added to the file name, so the final file will be called 'IdConverstion-FULL-New.csv'
 
@@ -50,6 +52,7 @@ A player's games played per position is filled in using the previous years value
 The rest of the fields are converted from the Fangraph file.
 
 #### How to run
+```
 priceguide-generator convert-fangraph 
                 -py=<previous year [2016]> 
                 -m=<location of master.csv>
@@ -58,6 +61,8 @@ priceguide-generator convert-fangraph
                 -f=<location of fangraphs projection file>
                 -f=<location of another fangraphs projection file>
                 -f=<...>
+```
+
 
 ## Data Sources
 A list of the datasources used to generate the Priceguide files:
