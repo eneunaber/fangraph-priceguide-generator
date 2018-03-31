@@ -21,28 +21,28 @@ namespace fangraph_priceguide_generator.Strategy
 
         private static void CreateHitterRecord(ExtraDetails extraDetails, List<FangraphHitterRecord> fgRecords)
         {
-            fgRecords.ForEach(x =>
+            fgRecords.ForEach(fgRecord =>
             {
-                var match = extraDetails.MasterRecords.FirstOrDefault(y => x.playerid == y.fg_id);
+                var match = extraDetails.MasterRecords.FirstOrDefault(masterRecord => fgRecord.playerid == masterRecord.fg_id);
                 if (match != null)
                 {
-                    x.defaultPos = match.yahoo_pos.Replace("/", "|");
-                    x.team = match.mlb_team;
-                    x.mlbamID = match.mlb_id;
+                    fgRecord.defaultPos = match.yahoo_pos.Replace("/", "|");
+                    fgRecord.team = match.mlb_team;
+                    fgRecord.mlbamID = match.mlb_id;
                     var lahmanMatch = extraDetails.LahmanRecords.FirstOrDefault(z => match.lahman_id == z.playerID && extraDetails.Year == z.yearID);
                     if (lahmanMatch != null)
                     {
-                        x.G = lahmanMatch.G_all;
-                        x.G_1B = lahmanMatch.G_1b;
-                        x.G_2B = lahmanMatch.G_2b;
-                        x.G_3B = lahmanMatch.G_3b;
-                        x.G_SS = lahmanMatch.G_ss;
-                        x.G_C = lahmanMatch.G_c;
-                        x.G_CF = lahmanMatch.G_cf;
-                        x.G_LF = lahmanMatch.G_lf;
-                        x.G_RF = lahmanMatch.G_rf;
-                        x.G_OF = lahmanMatch.G_of;
-                        x.league = lahmanMatch.lgID;
+                        fgRecord.G = lahmanMatch.G_all;
+                        fgRecord.G_1B = lahmanMatch.G_1b;
+                        fgRecord.G_2B = lahmanMatch.G_2b;
+                        fgRecord.G_3B = lahmanMatch.G_3b;
+                        fgRecord.G_SS = lahmanMatch.G_ss;
+                        fgRecord.G_C = lahmanMatch.G_c;
+                        fgRecord.G_CF = lahmanMatch.G_cf;
+                        fgRecord.G_LF = lahmanMatch.G_lf;
+                        fgRecord.G_RF = lahmanMatch.G_rf;
+                        fgRecord.G_OF = lahmanMatch.G_of;
+                        fgRecord.league = lahmanMatch.lgID;
                     }
                 }
             });
