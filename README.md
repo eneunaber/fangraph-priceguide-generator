@@ -18,14 +18,14 @@ This project was created to automate this process of using Fangraphs and other s
 This application has two commands that generate different types of file(s). Those commands are *conversion-record* and *convert-fangraph*. 
 
 ### conversion-record
-The conversion-record command creates an IdConversion-FULL.csv file. This is a mapping file that links a players "mlbamId" to the player id for variou fantasy websites (espn, yaoo, cbs, etc.). Priceguide has a Greasemonkey script that allows for prices to be displayed inside the UI of your fantasy website. The IdConversion file is used as part of this.
+The conversion-record command creates an IdConversion-FULL.csv file. This is a mapping file that links a players "mlbamId" to the player id for various fantasy websites (espn, yaoo, cbs, etc.). Priceguide has a Greasemonkey script that allows for prices to be displayed inside the UI of your fantasy website. The IdConversion file is used as part of this.
 
 This command takes in two parameters.
 1. Location of the master.csv (from data source 'Map of MLB Player Names and IDs').
 1. The location the file is to be saved to.
 
 #### How it works
-The master.csv file is read and converted to a list of in-memory records. That list is converted to the format that is used by Priceguid and then saved.
+The master.csv file is read and converted to a list of in-memory records. That list is converted to the format that is used by Priceguide and then saved.
 
 #### How to run
 ```
@@ -35,7 +35,7 @@ priceguide-generator conversion-record -m=<location of master.csv> -s=<output di
 **Note: '-New' will be added to the file name, so the final file will be called 'IdConverstion-FULL-New.csv'
 
 ### convert-fangraph
-This command will combine data from the master, appearances, and the fangraph file to create a record for the Priceguied application.
+This command will combine data from the master, appearances, and the fangraph file to create a record for the Priceguide application.
 
 This command takes in two parameters.
 1. The previous mlb year (e.g. 2016)
