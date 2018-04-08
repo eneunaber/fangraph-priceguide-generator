@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using AutoMapper;
 using fangraph_priceguide_generator.Strategy;
+using fangraph_priceguide_generator.Models;
 
 namespace fangraph_priceguide_generator.Commands
 {

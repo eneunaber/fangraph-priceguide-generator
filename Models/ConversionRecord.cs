@@ -1,4 +1,4 @@
-namespace fangraph_priceguide_generator
+namespace fangraph_priceguide_generator.Models
 {
     public class ConversionRecord
     {

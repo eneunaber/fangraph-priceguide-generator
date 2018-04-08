@@ -1,6 +1,7 @@
 using CsvHelper.Configuration;
+using fangraph_priceguide_generator.Models;
 
-namespace fangraph_priceguide_generator
+namespace fangraph_priceguide_generator.Mappings
 {
     public class FangraphHitterRecordMap : CsvClassMap<FangraphHitterRecord>
     {

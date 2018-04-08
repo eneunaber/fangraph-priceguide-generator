@@ -5,6 +5,7 @@ using AutoMapper;
 using fangraph_priceguide_generator.Strategy;
 using McMaster.Extensions.CommandLineUtils;
 using fangraph_priceguide_generator.Commands;
+using fangraph_priceguide_generator.Mappings;
 
 namespace fangraph_priceguide_generator
 {

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using fangraph_priceguide_generator.Models;
+using fangraph_priceguide_generator.Mappings;
 
 namespace fangraph_priceguide_generator
 {

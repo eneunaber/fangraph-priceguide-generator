@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using AutoMapper;
+using fangraph_priceguide_generator.Models;
+using fangraph_priceguide_generator.Mappings;
 
 namespace fangraph_priceguide_generator.Commands
 {
