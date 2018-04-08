@@ -16,23 +16,23 @@ namespace fangraph_priceguide_generator.Strategy
         }
         private static void CreatePitchingRecord(ExtraDetails extraDetails, List<FangraphPitcherRecord> fgrecords)
         {
-            fgrecords.ForEach(x =>
+            fgrecords.ForEach(fangraphRecord =>
             {
-                var match = extraDetails.MasterRecords.FirstOrDefault(y => x.playerid == y.fg_id);
+                var match = extraDetails.MasterRecords.FirstOrDefault(masterRecord => fangraphRecord.playerid == masterRecord.fg_id);
                 if (match != null)
                 {
-                    x.defaultPos = match.yahoo_pos.Replace("/", "|");
-                    x.team = match.mlb_team;
-                    x.mlbamID = match.mlb_id;
+                    fangraphRecord.defaultPos = match.yahoo_pos.Replace("/", "|");
+                    fangraphRecord.team = match.mlb_team;
+                    fangraphRecord.mlbamID = match.mlb_id;
                     var lahmanMatch = extraDetails.LahmanRecords.FirstOrDefault(z => match.lahman_id == z.playerID && extraDetails.Year == z.yearID);
                     if (lahmanMatch != null)
                     {
-                        x.G = lahmanMatch.G_all;
+                        fangraphRecord.G = lahmanMatch.G_all;
                         if(lahmanMatch.GS.HasValue) {
-                            x.G_SP = lahmanMatch.GS.Value;
-                            x.G_RP = lahmanMatch.G_p - lahmanMatch.GS.Value;
+                            fangraphRecord.G_SP = lahmanMatch.GS.Value;
+                            fangraphRecord.G_RP = lahmanMatch.G_p - lahmanMatch.GS.Value;
                         }
-                        x.league = lahmanMatch.lgID;
+                        fangraphRecord.league = lahmanMatch.lgID;
                     }
                 }
             });
