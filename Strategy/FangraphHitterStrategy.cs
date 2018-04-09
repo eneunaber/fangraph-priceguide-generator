@@ -6,14 +6,14 @@ using fangraph_priceguide_generator.Models;
 
 namespace fangraph_priceguide_generator.Strategy
 {
-    public class FangraphHitterStrategy : FangraphStrategy<FangraphHitterRecord>
+    public class FangraphHitterStrategy : IFangraphStrategy<FangraphHitterRecord>
     {
-        public override List<FangraphHitterRecord> LoadCSV(string fileLocation)
+        public List<FangraphHitterRecord> LoadCSV(string fileLocation)
         {
             return FileHelper.LoadFile<FangraphHitterRecord>(fileLocation);
         }
 
-        public override void WriteCSV(ExtraDetails extraDetails, List<FangraphHitterRecord> fgRecords, string fileLocation)
+        public void WriteCSV(ExtraDetails extraDetails, List<FangraphHitterRecord> fgRecords, string fileLocation)
         {
             CreateHitterRecord(extraDetails, fgRecords);
             FileHelper.SaveFile(fgRecords, fileLocation);

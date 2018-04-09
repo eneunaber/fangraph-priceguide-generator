@@ -4,12 +4,12 @@ using fangraph_priceguide_generator.Models;
 
 namespace fangraph_priceguide_generator.Strategy
 {
-    public class FangraphPitcherStrategy : FangraphStrategy<FangraphPitcherRecord>
+    public class FangraphPitcherStrategy : IFangraphStrategy<FangraphPitcherRecord>
     {
-        public override List<FangraphPitcherRecord> LoadCSV(string fileLocation) {
+        public List<FangraphPitcherRecord> LoadCSV(string fileLocation) {
             return FileHelper.LoadFile<FangraphPitcherRecord>(fileLocation);
         }
-        public override void WriteCSV(ExtraDetails extraDetails, List<FangraphPitcherRecord> fgRecords, string fileLocation) {
+        public void WriteCSV(ExtraDetails extraDetails, List<FangraphPitcherRecord> fgRecords, string fileLocation) {
             CreatePitchingRecord(extraDetails, fgRecords);
             FileHelper.SaveFile<FangraphPitcherRecord>(fgRecords, fileLocation);
         }
