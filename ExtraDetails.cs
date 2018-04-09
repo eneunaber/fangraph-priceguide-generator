@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using fangraph_priceguide_generator.Models;
 
 namespace fangraph_priceguide_generator
 {
